@@ -11,7 +11,7 @@ import '../models/products/celulares/moviles_report_response.dart';
 import '../models/products/celulares/moviles_response.dart';
 
 class  CelularProvider extends ChangeNotifier{
-  final String _baseUrl = '192.168.0.5:3000';
+  final String _baseUrl = '192.168.0.2:3000';
 
   List<Producto> listaProductos = [];
   List<ProductosReport> listaProductoReport = [];

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ImpresoraProvider extends ChangeNotifier{
-  final String _baseUrl = '192.168.0.5:3000';
+  final String _baseUrl = '192.168.0.2:3000';
 
   List<Producto> listaProductos = [];
   List<ProductosReport> listaProductoReport = [];

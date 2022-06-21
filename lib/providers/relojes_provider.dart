@@ -8,7 +8,7 @@ import '../models/products/relojes/relojes_report_response.dart';
 import '../models/products/relojes/relojes_response.dart';
 
 class RelojProvider extends ChangeNotifier{
-  final String _baseUrl = '192.168.0.5:3000';
+  final String _baseUrl = '192.168.0.2:3000';
 
   List<Producto> listaProductos = [];
   List<ProductosReport> listaProductoReport = [];

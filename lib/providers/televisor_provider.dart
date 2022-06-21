@@ -9,7 +9,7 @@ import '../models/products/televisores/televisor.dart';
 import 'package:http/http.dart' as http;
 
 class TelevisorProvider extends ChangeNotifier {
-  final String _baseUrl = '192.168.0.5:3000';
+  final String _baseUrl = '192.168.0.2:3000';
 
   List<Televisor> listaTelevisor = [];
   List<TelevisorReport> listaTelevisorReport = [];

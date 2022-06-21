@@ -6,7 +6,7 @@ import '../models/products/populares/popular_response.dart';
 import 'package:http/http.dart' as http;
 
 class PopularProvider extends ChangeNotifier{
-  final String _baseUrl = '192.168.0.5:3000';
+  final String _baseUrl = '192.168.0.2:3000';
 
   List<Producto> listaProductos = [];
 
