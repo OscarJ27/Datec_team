@@ -224,6 +224,7 @@ class _ProductFormComScreenState extends State<ProductFormComScreen> {
                         setState((){
                           _estadoActivo = value;
                           print('_estadoActivo: ${_estadoActivo}');
+                          formModificado = true;
                         });
                       }),
                   const Text('Activo')
