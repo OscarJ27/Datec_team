@@ -17,15 +17,49 @@ enum Categorias {analogico, digital, automaticos, deportivos}
 class _RelojFormState extends State<RelojForm> {
 
   final _formkey = GlobalKey<FormState>();
+  final txtProductoId = TextEditingController();
   final txtDescripcion = TextEditingController();
   final txtPrecio = TextEditingController();
   final txtImagen = TextEditingController();
   Categorias? _catSeleccion = Categorias.analogico;
   bool? _estadoActivo = false;
+  bool formModificado = false;
+
+
 
   @override
   Widget build(BuildContext context) {
     final relojProvider = Provider.of<RelojProvider>(context);
+    final Producto? producto =
+        ModalRoute.of(context)!.settings.arguments as Producto?;
+
+    if (!formModificado) {
+      if (producto != null) {
+        //editar 
+        txtProductoId.text = producto.productoId.toString();
+        txtDescripcion.text = producto.descripcion;
+        txtPrecio.text = producto.precio.toString();
+        txtImagen.text = producto.imagen;
+        print(producto.categoria);
+        print(producto.estado);
+        if (producto.categoria == 'Categoria.analogico') {
+          _catSeleccion = Categorias.analogico;
+        } else {
+          _catSeleccion = Categorias.digital;
+        }
+        
+        _estadoActivo = (producto.estado == 'true') ? true : false;
+      } else {
+        txtProductoId.text = '0';
+        txtDescripcion.text = '';
+        txtPrecio.text = '';
+        txtImagen.text = '';
+      }
+    }
+
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('REGISTRO DE PRODUCTO'),
@@ -36,6 +70,14 @@ class _RelojFormState extends State<RelojForm> {
           child: Form(
             key: _formkey,
             child: Column(children: <Widget>[
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      labelText: 'ProductoId',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),),
+                      controller: txtProductoId),
               const SizedBox(height: 20,),
               TextFormField(
                 decoration: InputDecoration(
@@ -44,6 +86,8 @@ class _RelojFormState extends State<RelojForm> {
                       borderRadius: BorderRadius.circular(10.0),
                     )
                 ),
+
+                
                 controller: txtDescripcion,
                 validator: (value){
                   if (value!.isEmpty){
@@ -102,6 +146,7 @@ class _RelojFormState extends State<RelojForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Analogico'),
@@ -115,6 +160,7 @@ class _RelojFormState extends State<RelojForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Automaticos'),
@@ -128,6 +174,7 @@ class _RelojFormState extends State<RelojForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Digital'),
@@ -141,6 +188,7 @@ class _RelojFormState extends State<RelojForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Deportivos')
@@ -162,6 +210,7 @@ class _RelojFormState extends State<RelojForm> {
                         setState((){
                           _estadoActivo = value;
                           print('_estadoActivo: ${_estadoActivo}');
+                          formModificado = true;
                         });
                       }),
                   const Text('Activo')
@@ -178,7 +227,7 @@ class _RelojFormState extends State<RelojForm> {
                       );
                       var producto = Producto(
                         id: '',
-                        productoId: 0,
+                        productoId: int.parse(txtProductoId.text),
                         descripcion: txtDescripcion.text,
                         precio: int.parse(txtPrecio.text),
                         imagen: txtImagen.text,
@@ -194,7 +243,8 @@ class _RelojFormState extends State<RelojForm> {
                   },
                 ),
               )
-            ],),
+            ],
+            ),
           ),
         ),
       ),

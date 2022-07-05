@@ -20,17 +20,51 @@ enum Categorias {computadoras, celulares, sonido, accesorios}
 class _CelularesForm extends State<CelularesForm> {
    
    final _formkey = GlobalKey<FormState>();
+   final txtProductoId = TextEditingController();
   final txtDescripcion = TextEditingController();
   final txtPrecio = TextEditingController();
   final txtImagen = TextEditingController();
 
   Categorias? _catSeleccion = Categorias.computadoras;
   bool? _estadoActivo = false;
+  bool formModificado = false;
 
   @override
   Widget build(BuildContext context) {
     final celularProvider = Provider.of<CelularProvider>(context);
-    return Scaffold(
+    final Producto? producto =
+        ModalRoute.of(context)!.settings.arguments as Producto?;
+
+        if (!formModificado) {
+      if (producto != null) {
+        //editar 
+        txtProductoId.text = producto.productoId.toString();
+        txtDescripcion.text = producto.descripcion;
+        txtPrecio.text = producto.precio.toString();
+        txtImagen.text = producto.imagen;
+        print(producto.categoria);
+        print(producto.estado);
+        if (producto.categoria == 'computadoras.celulares') {
+          _catSeleccion = Categorias.computadoras;
+        } else {
+          _catSeleccion = Categorias.celulares;
+        }
+        
+        _estadoActivo = (producto.estado == 'true') ? true : false;
+      } else {
+        txtProductoId.text = '0';
+        txtDescripcion.text = '';
+        txtPrecio.text = '';
+        txtImagen.text = '';
+      }
+    }
+
+
+
+
+
+
+   return Scaffold(
       appBar: AppBar(
         title: const Text('REGISTRO DE PRODUCTO'),
       ),
@@ -40,6 +74,14 @@ class _CelularesForm extends State<CelularesForm> {
           child: Form(
             key: _formkey,
             child: Column(children: <Widget>[
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      labelText: 'ProductoId',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),),
+                      controller: txtProductoId),
               const SizedBox(height: 20,),
               TextFormField(
                 decoration: InputDecoration(
@@ -55,6 +97,7 @@ class _CelularesForm extends State<CelularesForm> {
                   }
                 },
               ),
+
               const SizedBox(height: 30,),
               TextFormField(
                 decoration: InputDecoration(
@@ -106,6 +149,7 @@ class _CelularesForm extends State<CelularesForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Computadoras'),
@@ -119,6 +163,7 @@ class _CelularesForm extends State<CelularesForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Sonido'),
@@ -132,6 +177,7 @@ class _CelularesForm extends State<CelularesForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Celulares'),
@@ -145,6 +191,7 @@ class _CelularesForm extends State<CelularesForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Accesorios')
@@ -166,6 +213,7 @@ class _CelularesForm extends State<CelularesForm> {
                         setState((){
                           _estadoActivo = value;
                           print('_estadoActivo: ${_estadoActivo}');
+                          formModificado = true;
                         });
                       }),
                   const Text('Activo')
@@ -182,7 +230,7 @@ class _CelularesForm extends State<CelularesForm> {
                       );
                       var producto = Producto(
                         id: '',
-                        productoId: 0,
+                        productoId: int.parse(txtProductoId.text),
                         descripcion: txtDescripcion.text,
                         precio: int.parse(txtPrecio.text),
                         imagen: txtImagen.text,
