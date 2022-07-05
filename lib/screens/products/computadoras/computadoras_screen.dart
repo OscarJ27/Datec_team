@@ -3,7 +3,7 @@ import 'package:appdatec/providers/computadoras_provider.dart';
 import 'package:appdatec/screens/drawer/menu_lateral.dart';
 import 'package:appdatec/screens/products/computadoras/form/com_form.dart';
 import 'package:appdatec/screens/products/computadoras/report/report_computadoras_screen.dart';
-import 'package:appdatec/search/product_search_delegate.dart';
+import 'package:appdatec/search/computer_search_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
