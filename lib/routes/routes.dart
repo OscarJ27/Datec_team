@@ -18,12 +18,14 @@ import 'package:appdatec/screens/products/relojes/report/report_relojes_screen.d
 import 'package:appdatec/screens/products/televisores/form/tele_form.dart';
 import 'package:appdatec/screens/products/televisores/report/report_televisores_screen.dart';
 import 'package:appdatec/screens/products/televisores/televisor_screen.dart';
+import 'package:appdatec/screens/splash/splash_animated_screen.dart';
 import 'package:appdatec/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 // We use name route
 // All our routes will be available here
 final Map<String, WidgetBuilder> routes = {
+  SplashAnimated.routeName: (context) => const SplashAnimated(),
   SplashScreen.routeName: (context) => const SplashScreen(),
   SignInScreen.routeName: (context) => const SignInScreen(),
   SignUpScreen.routeName: (context) => const SignUpScreen(),

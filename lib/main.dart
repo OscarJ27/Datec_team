@@ -3,7 +3,7 @@ import 'package:appdatec/providers/impresoras_provider.dart';
 import 'package:appdatec/providers/metodo_provider.dart';
 import 'package:appdatec/providers/relojes_provider.dart';
 import 'package:appdatec/providers/televisor_provider.dart';
-import 'package:appdatec/screens/splash/splash_screen.dart';
+import 'package:appdatec/screens/splash/splash_animated_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,11 +34,14 @@ class MyApp extends StatelessWidget {
         title: 'APP DATEC',
         theme:theme(),
         // home: const SplashScreen(),
-        initialRoute: SplashScreen.routeName,
+        initialRoute: SplashAnimated.routeName,
         routes: routes,
       ),
     );
   }
 }
+
+
+
 
 

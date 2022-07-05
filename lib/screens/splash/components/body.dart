@@ -32,7 +32,7 @@ class _BodyState extends State<Body> {
                 const Text("Bienvenido a Datec, Vamos a la tienda"),
                 const Spacer(flex: 2,),
                 Image.asset(
-                  "assets/images/datec.png",
+                  "assets/images/datec2.png",
                   height: 265,
                   width: 235,
                 )

@@ -1,6 +1,6 @@
 const  {reset} = require("nodemon");
 let client = require ("../../database/db");
-let db = client.db("Datec");
+let db = client.db("CODB");
 
 let controller = {
     productosReport: function (req, res) {

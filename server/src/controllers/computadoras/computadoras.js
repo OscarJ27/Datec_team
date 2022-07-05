@@ -1,5 +1,5 @@
 const client = require("../../database/db"),
-    db = client.db('Datec');
+    db = client.db('CODB');
 
 let controller = {
 

@@ -19,107 +19,139 @@ class ProductoComScreen extends StatefulWidget {
 class _ProductoComScreenState extends State<ProductoComScreen> {
   @override
   Widget build(BuildContext context) {
-
     final computoProvider = Provider.of<ComputoProvider>(context);
-    final List<Producto> listaProductos = computoProvider.listaProductos.cast<Producto>();
+    final List<Producto> listaProductos = computoProvider.listaProductos;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Computadoras"),
-      ),
-      drawer: const MenuLateral(),
-      body: Center(
-        child: ListView.builder(
-          itemCount: listaProductos.length,
-          itemBuilder: (context, index){
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
-                width: double.infinity,
-                height: 300,
-                decoration: _cardBorders(),
-                child: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 300,
-                        child: FadeInImage(
-                          placeholder: const AssetImage('assets/images/R.gif'),
-                          image: NetworkImage(listaProductos[index].imagen),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      child: ListTile(
-                        title: Text(listaProductos[index].descripcion,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black
-                          ),
-                        ),
-                        subtitle: Text('S/. ${listaProductos[index].precio}',
-                          style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-              ,
-            );
-          },
-        ),
-      ),
-      /*
-      floatingActionButton: FloatingActionButton(
-        hoverColor: kPrimaryColor,
-        onPressed: (){
-          Navigator.pushNamed(context, ProductFormComScreen.routeName);
-        },
-        backgroundColor: kPrimaryColor,
-        child: const Icon(Icons.add),
-      ),*/
-      floatingActionButton: SpeedDial(
-          animatedIcon: AnimatedIcons.menu_close,
-          backgroundColor: Colors.black,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.4,
-          spacing: 12,
-          spaceBetweenChildren: 12,
-          children: [
-            SpeedDialChild(
-              child: const Icon(Icons.pie_chart),
-              label: 'reporte',
-              onTap: () => Navigator.pushNamed(context, ReportComScreen.routeName),
-            ),
-            SpeedDialChild(
-                child: const Icon(Icons.computer),
-                label: 'form',
-              onTap: () => Navigator.pushNamed(context, ProductFormComScreen.routeName),
-            ),
+        appBar: AppBar(
+          title: const Text("Computer", style: TextStyle(color: Colors.black),),
+          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.search)
+            )
           ],
+        ),
+        drawer: const MenuLateral(),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 3 / 2,
+                  maxCrossAxisExtent: 300,
+                  mainAxisExtent: 300,
+              ),
+              itemCount: listaProductos.length,
+              itemBuilder: (BuildContext context , int index) {
+                return _cardProducto(listaProductos[index]);
+              },
+            ),
+        ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.black,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.4,
+        spacing: 12,
+        spaceBetweenChildren: 12,
+        children: [
+          SpeedDialChild(
+            child: const Icon(
+              Icons.pie_chart
+            ),
+            label: 'Reporte',
+            onTap: () => Navigator.pushNamed(context, ReportComScreen.routeName)
+          ),
+          SpeedDialChild(
+              child: const Icon(
+                  Icons.computer
+              ),
+              label: 'Agregar',
+              onTap: () => Navigator.pushNamed(context, ProductFormComScreen.routeName)
+          ),
+        ],
+      ),
+    );
+  }
+}
+class _cardProducto extends StatelessWidget{
+  final Producto producto;
+  const _cardProducto(this.producto);
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.withOpacity(.5),
+              offset: const Offset(3, 2),
+              blurRadius: 7
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 140,
+                  child: FadeInImage(
+                    placeholder: const AssetImage("assets/images/R.gif"),
+                    image: NetworkImage(producto.imagen,),
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+          ),
+          Text(producto.descripcion,
+            style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          const Text("Admin", style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey
+          ),
+          ),
+          const SizedBox(height: 5,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(padding: const EdgeInsets.only(left: 6.0),
+                child: Text("S/ ${producto.precio}",
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                  ),),
+              ),
+              const SizedBox(width: 30,),
+              IconButton(
+                  onPressed: (){
+                    Navigator.pushNamed(
+                        context, ProductFormComScreen.routeName,
+                        arguments: producto);
+                  },
+                  icon: const Icon(Icons.edit))
+            ],
+          )
+        ],
       ),
     );
   }
 }
 
-BoxDecoration _cardBorders() => BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20),
-    boxShadow: const [
-      BoxShadow(
-          color: Colors.black12,
-          offset: Offset(0, 7),
-          blurRadius: 10
-      )
-    ]
-);
 
