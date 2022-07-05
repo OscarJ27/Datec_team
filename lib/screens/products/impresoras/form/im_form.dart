@@ -15,15 +15,48 @@ enum Categorias {computadoras, celulares, sonido, accesorios}
 class _ImpresoraFormState extends State<ImpresoraForm> {
 
   final _formkey = GlobalKey<FormState>();
+  final txtProductoId = TextEditingController();
   final txtDescripcion = TextEditingController();
   final txtPrecio = TextEditingController();
   final txtImagen = TextEditingController();
   Categorias? _catSeleccion = Categorias.computadoras;
   bool? _estadoActivo = false;
+  bool formModificado = false;
 
   @override
   Widget build(BuildContext context) {
     final impresoraProvider = Provider.of<ImpresoraProvider>(context);
+     final Producto? producto =
+        ModalRoute.of(context)!.settings.arguments as Producto?;
+
+        if (!formModificado) {
+      if (producto != null) {
+        //editar 
+        txtProductoId.text = producto.productoId.toString();
+        txtDescripcion.text = producto.descripcion;
+        txtPrecio.text = producto.precio.toString();
+        txtImagen.text = producto.imagen;
+        print(producto.categoria);
+        print(producto.estado);
+        if (producto.categoria == 'Computadoras.celulares') {
+          _catSeleccion = Categorias.computadoras;
+        } else {
+          _catSeleccion = Categorias.celulares;
+        }
+        
+        _estadoActivo = (producto.estado == 'true') ? true : false;
+      } else {
+        txtProductoId.text = '0';
+        txtDescripcion.text = '';
+        txtPrecio.text = '';
+        txtImagen.text = '';
+      }
+    }
+
+
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('REGISTRO DE PRODUCTO'),
@@ -34,6 +67,14 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
           child: Form(
             key: _formkey,
             child: Column(children: <Widget>[
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      labelText: 'ProductoId',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),),
+                      controller: txtProductoId),
               const SizedBox(height: 20,),
               TextFormField(
                 decoration: InputDecoration(
@@ -42,6 +83,8 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                       borderRadius: BorderRadius.circular(10.0),
                     )
                 ),
+
+                
                 controller: txtDescripcion,
                 validator: (value){
                   if (value!.isEmpty){
@@ -49,6 +92,8 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                   }
                 },
               ),
+
+
               const SizedBox(height: 30,),
               TextFormField(
                 decoration: InputDecoration(
@@ -100,6 +145,7 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Computadoras'),
@@ -113,6 +159,8 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
+                            
                           });
                         }),
                     const Text('Sonido'),
@@ -126,6 +174,7 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Celulares'),
@@ -139,6 +188,7 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                           setState((){
                             _catSeleccion = value as Categorias?;
                             print(_catSeleccion);
+                            formModificado = true;
                           });
                         }),
                     const Text('Accesorios')
@@ -160,6 +210,7 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                         setState((){
                           _estadoActivo = value;
                           print('_estadoActivo: ${_estadoActivo}');
+                          formModificado = true;
                         });
                       }),
                   const Text('Activo')
@@ -175,8 +226,8 @@ class _ImpresoraFormState extends State<ImpresoraForm> {
                           const SnackBar(content: Text('Validando...'),)
                       );
                       var producto = Producto(
-                        id: '',
-                        productoId: 0,
+                         id: '',
+                        productoId: int.parse(txtProductoId.text),
                         descripcion: txtDescripcion.text,
                         precio: int.parse(txtPrecio.text),
                         imagen: txtImagen.text,

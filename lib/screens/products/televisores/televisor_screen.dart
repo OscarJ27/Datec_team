@@ -3,6 +3,8 @@ import 'package:appdatec/providers/televisor_provider.dart';
 import 'package:appdatec/screens/drawer/menu_lateral.dart';
 import 'package:appdatec/screens/products/televisores/form/tele_form.dart';
 import 'package:appdatec/screens/products/televisores/report/report_televisores_screen.dart';
+import 'package:appdatec/search/televisor_search_delegate.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
@@ -22,55 +24,34 @@ class _TelevisorScreenState extends State<TelevisorScreen> {
     final List<Televisor> listaTelevisor =
         televisorProvider.listaTelevisor.cast<Televisor>();
 
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Televisores"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate: TelevisorSearchDelegate(listaTelevisor));
+            },
+          )
+        ],
       ),
       drawer: const MenuLateral(),
-      body: Center(
-        child: ListView.builder(
+      body: Container(
+        width: double.infinity,
+        height: size.height * 0.7,
+        color: Colors.white,
+        child: Swiper(
           itemCount: listaTelevisor.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
-                width: double.infinity,
-                height: 300,
-                decoration: _cardBorders(),
-                child: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 300,
-                        child: FadeInImage(
-                          placeholder: const AssetImage('assets/images/R.gif'),
-                          image: NetworkImage(listaTelevisor[index].imagen),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      child: ListTile(
-                        title: Text(
-                          listaTelevisor[index].descripcion,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black),
-                        ),
-                        subtitle: Text(
-                          'S/. ${listaTelevisor[index].precio}',
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.black),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
+          layout: SwiperLayout.STACK,
+          itemWidth: size.width * 0.8,
+          itemHeight: size.height * 0.7,
+          itemBuilder: (BuildContext context, int index) {
+            return _cardTelevisor(listaTelevisor[index]);
           },
         ),
       ),
@@ -95,6 +76,87 @@ class _TelevisorScreenState extends State<TelevisorScreen> {
                 Navigator.pushNamed(context, TelevisorFormScreen.routeName),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _cardTelevisor extends StatelessWidget {
+  final Televisor televisor;
+  _cardTelevisor(this.televisor);
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(top: 140, bottom: 20),
+      width: double.infinity,
+      height: size.height * 0.5,
+      decoration: _cardBorders(),
+      child: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          _ImagenFondo(televisor),
+          _EtiquetaPrecio(televisor),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImagenFondo extends StatelessWidget {
+  final Televisor televisor;
+  _ImagenFondo(this.televisor);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: Container(
+        width: double.infinity,
+        height: 400,
+        child: FadeInImage(
+          placeholder: AssetImage('assets/images/R.gif'),
+          image: NetworkImage(televisor.imagen),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class _EtiquetaPrecio extends StatelessWidget {
+  final Televisor televisor;
+  _EtiquetaPrecio(this.televisor);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25)),
+          color: Colors.amberAccent),
+      child: ListTile(
+        title: Text(
+          televisor.descripcion,
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+        subtitle: Text(
+          'S/.' + televisor.precio.toString(),
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
+        ),
+        trailing: IconButton(
+          icon: const Icon(
+            Icons.edit,
+            color: Colors.blueAccent,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, TelevisorFormScreen.routeName,
+                arguments: televisor);
+          },
+        ),
       ),
     );
   }

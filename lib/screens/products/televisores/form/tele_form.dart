@@ -17,15 +17,42 @@ enum Categorias { samsung, panasonic, lg, sony }
 
 class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
   final _formkey = GlobalKey<FormState>();
+  final txtTelevisorId = TextEditingController();
   final txtDescripcion = TextEditingController();
   final txtPrecio = TextEditingController();
   final txtImagen = TextEditingController();
   Categorias? _catSeleccion = Categorias.samsung;
   bool? _estadoActivo = false;
+  bool formModificado = false;
 
   @override
   Widget build(BuildContext context) {
     final televisorProvider = Provider.of<TelevisorProvider>(context);
+
+    final Televisor? televisor =
+        ModalRoute.of(context)!.settings.arguments as Televisor?;
+
+    if (!formModificado) {
+      if (televisor != null) {
+        txtTelevisorId.text = televisor.televisorId.toString();
+        txtDescripcion.text = televisor.descripcion;
+        txtPrecio.text = televisor.precio.toString();
+        txtImagen.text = televisor.imagen;
+        print(televisor.categoria);
+        print(televisor.estado);
+        if (televisor.categoria == 'Categoria.samsung') {
+          _catSeleccion = Categorias.samsung;
+        } else {
+          _catSeleccion = Categorias.lg;
+        }
+        _estadoActivo = (televisor.estado == 'true') ? true : false;
+      } else {
+        txtTelevisorId.text = '0';
+        txtDescripcion.text = '';
+        txtPrecio.text = '';
+        txtImagen.text = '';
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('REGISTRO DE TELEVISORES'),
@@ -39,6 +66,23 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
               children: <Widget>[
                 const SizedBox(
                   height: 20,
+                ),
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      labelText: 'TelevisorId',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
+                  controller: txtTelevisorId,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor ingrese una descripcion';
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -106,6 +150,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                             setState(() {
                               _catSeleccion = value as Categorias?;
                               print(_catSeleccion);
+                              formModificado = true;
                             });
                           }),
                       const Text('Samsung'),
@@ -119,6 +164,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                             setState(() {
                               _catSeleccion = value as Categorias?;
                               print(_catSeleccion);
+                              formModificado = true;
                             });
                           }),
                       const Text('LG'),
@@ -132,6 +178,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                             setState(() {
                               _catSeleccion = value as Categorias?;
                               print(_catSeleccion);
+                              formModificado = true;
                             });
                           }),
                       const Text('Panasonic'),
@@ -145,6 +192,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                             setState(() {
                               _catSeleccion = value as Categorias?;
                               print(_catSeleccion);
+                              formModificado = true;
                             });
                           }),
                       const Text('Sony')
@@ -166,6 +214,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                           setState(() {
                             _estadoActivo = value;
                             print('_estadoActivo: ${_estadoActivo}');
+                            formModificado = true;
                           });
                         }),
                     const Text('Activo')
@@ -184,7 +233,7 @@ class _TelevisorFormScreenState extends State<TelevisorFormScreen> {
                         ));
                         var televisor = Televisor(
                           id: '',
-                          televisorId: 0,
+                          televisorId: int.parse(txtTelevisorId.text),
                           descripcion: txtDescripcion.text,
                           precio: int.parse(txtPrecio.text),
                           imagen: txtImagen.text,
