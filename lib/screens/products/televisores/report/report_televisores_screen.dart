@@ -26,7 +26,7 @@ class _ReportTeleScreenState extends State<ReportTeleScreen> {
           domainFn: (TelevisorReport serie, _) => serie.id,
           measureFn: (TelevisorReport serie, _) => serie.count,
           colorFn: (TelevisorReport serie, _) => charts.ColorUtil.fromDartColor(
-                Colors.blue,
+                Colors.amber.shade500,
               ))
     ];
 
