@@ -1,6 +1,6 @@
 const  {reset} = require("nodemon");
 let client = require ("../../database/db");
-let db = client.db("OscarDB");
+let db = client.db("DATEC");
 
 let controller = {
     televisorReport: function (req, res) {
